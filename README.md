@@ -1,0 +1,1 @@
+# nonebot-plugin-stable-diffusion
