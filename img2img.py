@@ -12,7 +12,7 @@ base_url = plugin_config['aidraw_base_url']
 default_promp = plugin_config['aidraw_default_prompt']
 default_negative_promp = plugin_config['aidraw_default_negative_prompt']
 
-with open("./test03/plugins/AIDraw/default json/img2img.json", encoding="utf-8") as f:
+with open("./src/plugins/nonebot-plugin-stable-diffusion/default_json/img2img.json", encoding="utf-8") as f:
         img2img_default_dict:dict = json.loads(f.read())
 
 
