@@ -3,9 +3,8 @@ from httpx import HTTPError, TimeoutException
 from nonebot import Bot
 from nonebot import get_driver
 from nonebot.params import CommandArg
-from nonebot.plugin.on import on_command,on_shell_command
-from nonebot.rule import ArgumentParser
-import nonebot.params
+from nonebot.plugin.on import on_command
+
 from nonebot.adapters.onebot.v11 import Message, MessageEvent, GroupMessageEvent, MessageSegment
 
 from .config import Config
@@ -18,6 +17,7 @@ message_draw = on_command("绘图")
 async def draw(bot:Bot, event:MessageEvent, args:Message = CommandArg()):
     await bot.send(event=event, message='在画了，别急')
     print(args.extract_plain_text())
+
     try:
         img_list = await text2img(args.extract_plain_text())
     except TimeoutException:
