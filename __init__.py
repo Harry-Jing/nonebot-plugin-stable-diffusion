@@ -1,24 +1,29 @@
-from httpx import TimeoutException
+from httpx import HTTPError, TimeoutException
 
 from nonebot import Bot
 from nonebot import get_driver
 from nonebot.params import CommandArg
-from nonebot.plugin.on import on_command,on_message
+from nonebot.plugin.on import on_command,on_shell_command
+from nonebot.rule import ArgumentParser
+import nonebot.params
 from nonebot.adapters.onebot.v11 import Message, MessageEvent, GroupMessageEvent, MessageSegment
 
 from .config import Config
-from .img2img import img2img
+from .text2img import text2img
 
 
 message_draw = on_command("绘图")
 
 @message_draw.handle()
 async def draw(bot:Bot, event:MessageEvent, args:Message = CommandArg()):
+    await bot.send(event=event, message='在画了，别急')
     print(args.extract_plain_text())
     try:
-        img_list = await img2img(args.extract_plain_text())
+        img_list = await text2img(args.extract_plain_text())
     except TimeoutException:
         await bot.send(event=event, message='请求超时')
+    except HTTPError:
+        await bot.send(event=event, message='其他网络错误')
         
     message = [MessageSegment.node_custom(
                 user_id=event.user_id,
@@ -29,7 +34,7 @@ async def draw(bot:Bot, event:MessageEvent, args:Message = CommandArg()):
         message.append(MessageSegment.node_custom(
                 user_id=event.user_id,
                 nickname="AI画家",
-                content=MessageSegment.image(img.content)
+                content=MessageSegment.image(img)
                 ))
     if isinstance(event, GroupMessageEvent):
         await bot.send_group_forward_msg(group_id=event.group_id, messages=message)
