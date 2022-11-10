@@ -8,6 +8,8 @@ from nonebot.params import ShellCommandArgv, ShellCommandArgs
 from nonebot.plugin.on import on_shell_command
 from nonebot.exception import ParserExit
 
+from .data_model import *
+
 parser = ArgumentParser()
 parser.add_argument('--count')
 parser.add_argument('--step')
@@ -28,6 +30,6 @@ async def test(bot:Bot, argv:list = ShellCommandArgv(), args:Union[Namespace,Par
         await shell_command_draw.send(f'argv=[]')
         await shell_command_draw.finish(parser.format_help())
 
-    await shell_command_draw.send(f"{args=}")
+    data = Text2imgData(
 
-    logger.info(f"{args=}")
+    )

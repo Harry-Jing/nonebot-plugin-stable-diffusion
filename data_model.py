@@ -12,7 +12,7 @@ class Text2imgData(BaseModel):
     step: int = plugin_config['aidraw_default_step']
     width: int = plugin_config['aidaidraw_default_width']
     height: int = plugin_config['aidaidraw_default_height']
-    scale: float = plugin_config['aidraw_default_scale']
+    scale: int = plugin_config['aidraw_default_scale']
 
     @validator('prompt')
     def add_default_prompt(cls, value):
