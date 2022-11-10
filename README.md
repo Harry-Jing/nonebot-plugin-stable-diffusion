@@ -7,10 +7,9 @@
 # 功能列表
 - text2img
     - [x] 支持基础功能
-    - [ ] 根据网页生成返回文字生成
     - [ ] 支持更详细参数
         - [x] Sampling Steps
-        - [ ] Sampling method
+        - [x] Sampling method
         - [x] Batch count
         - [x] CFG Scale
         - [ ] Seed
@@ -19,5 +18,5 @@
     - [ ] 支持更详细参数
 - others
     - [ ] 支持中文翻译
-    - [ ] 返回详细数据（种子，scale等）
+    - [x] 返回详细数据（种子，scale等）
     - [ ] 支持敏感词屏蔽

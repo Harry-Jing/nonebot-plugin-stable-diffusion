@@ -18,7 +18,6 @@ async def SDWebuiText2imgRequest(request_json) -> Tuple[list[bytes], str]:
     
     #解码图片
     response_json = response.json()
-    print(response_json)
     img_list = [base64.b64decode(i) for i in response_json['images']]
     info = response_json['info']
     print(info)
