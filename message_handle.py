@@ -24,7 +24,7 @@ shell_command_draw = on_shell_command("绘图", parser=parser)
 
 @shell_command_draw.handle()
 async def test(bot:Bot, event:MessageEvent, argv:list = ShellCommandArgv(), args:Union[Namespace,ParserExit] = ShellCommandArgs()):
-    #获取数据至data
+    #处理发送数据
     if isinstance(args, ParserExit):
         #错误输入
         await shell_command_draw.send('错误输入')
@@ -32,23 +32,23 @@ async def test(bot:Bot, event:MessageEvent, argv:list = ShellCommandArgv(), args
     if argv == []:
         #无内容 -> 发送帮助
         await shell_command_draw.finish(parser.format_help())
-    
+
+    #获取数据至data
     d = {key:value for key,value in vars(args).items() if value!=None}
     prompt = ''.join(d.pop('prompt', ''))
     negaive_prompt = ''.join(d.pop('negaive_prompt', ''))
-    shell_command_draw.send(f'{d=}')
     try:
         data = GeneralText2imgData(prompt = prompt,negative_prompt = negaive_prompt, **d)
     except ValidationError:
         await shell_command_draw.finish(parser.format_help())
     
     #获取图片
-    img_list = await SDWebuiText2imgRequest(GeneralText2imgData_to_SDWebuiText2imgData(data).json())
+    img_list, info = await SDWebuiText2imgRequest(GeneralText2imgData_to_SDWebuiText2imgData(data).json())
     #发送图片
     message = [MessageSegment.node_custom(
                 user_id=event.user_id,
                 nickname="AI画家",
-                content=MessageSegment.text(GeneralText2imgData_to_SDWebuiText2imgData(data).json())
+                content=MessageSegment.text(info)
                 )]
     for img in img_list:
         message.append(MessageSegment.node_custom(
