@@ -15,7 +15,7 @@ parser.add_argument('--count')
 parser.add_argument('--step')
 parser.add_argument('--resolution')
 parser.add_argument('--scale')
-parser.add_argument('args',nargs='*')
+parser.add_argument('prompt',nargs='*')
 
 
 shell_command_draw = on_shell_command("绘图", parser=parser)
@@ -29,7 +29,14 @@ async def test(bot:Bot, argv:list = ShellCommandArgv(), args:Union[Namespace,Par
         #无内容 -> 发送帮助
         await shell_command_draw.send(f'argv=[]')
         await shell_command_draw.finish(parser.format_help())
+    
+    d = {key:value for key,value in vars(args).items() if value!=None}
+    prompt = ''.join(d.pop('prompt', ''))
+    negaive_prompt = ''.join(d.pop('negaive_prompt', ''))
+    shell_command_draw.send(f'{d=}')
+    try:
+        data = Text2imgData(prompt = prompt,negative_prompt = negaive_prompt, **d)
+    except ValidationError:
+        await shell_command_draw.finish(parser.format_help())
 
-    data = Text2imgData(
-
-    )
+    await shell_command_draw.send(f'{data=}')

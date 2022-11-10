@@ -1,4 +1,4 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, ValidationError, validator
 
 from nonebot import get_driver
 from .config import Config
@@ -12,7 +12,7 @@ class Text2imgData(BaseModel):
     step: int = plugin_config['aidraw_default_step']
     width: int = plugin_config['aidaidraw_default_width']
     height: int = plugin_config['aidaidraw_default_height']
-    scale: int = plugin_config['aidraw_default_scale']
+    scale: float = plugin_config['aidraw_default_scale']
 
     @validator('prompt')
     def add_default_prompt(cls, value):
@@ -33,4 +33,8 @@ class Text2imgData(BaseModel):
         if not value%64 == 0:
             return round(value//64)*64
         return value
-    
+
+
+
+class SD_webui_Text2imgData(BaseModel):
+    ...
