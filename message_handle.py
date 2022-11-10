@@ -50,12 +50,15 @@ async def test(bot:Bot, event:MessageEvent, argv:list = ShellCommandArgv(), args
 
     #获取数据至data
     try:
-        d = {key:value for key,value in vars(args).items() if value!=None}
-        d['width'], d['height'] = d.pop('resolution')
-        prompt = ''.join(d.pop('prompt', ''))
-        negaive_prompt = ''.join(d.pop('negaive_prompt', ''))
-        data = GeneralText2imgData(prompt = prompt,negative_prompt = negaive_prompt, **d)
-    except :
+        input_args_dict = vars(args)
+        print(input_args_dict)
+        if not input_args_dict['resolution'] == None:
+            input_args_dict['width'], input_args_dict['height'] = input_args_dict.pop('resolution')
+        prompt = ''.join(input_args_dict.pop('prompt', ''))
+        negaive_prompt = ''.join(input_args_dict.pop('negaive_prompt', ''))
+        data_dict = {key:value for key,value in input_args_dict.items() if value!=None}
+        data = GeneralText2imgData(prompt = prompt,negative_prompt = negaive_prompt, **data_dict)
+    except:
         await shell_command_draw.send('格式错误')
         await shell_command_draw.finish(help_content)
     #获取图片
