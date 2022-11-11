@@ -14,7 +14,8 @@ async def SDWebuiText2imgRequest(request_json) -> Tuple[list[bytes], str]:
     #发送post请求生成绘图
     async with httpx.AsyncClient() as client:
         response = await client.post(url=base_url+'/sdapi/v1/txt2img',data=request_json, timeout=60)
-        print(response)
+        print(f'{response=}    {response.status_code}')
+        response.raise_for_status()
     
     #解码图片
     response_json = response.json()

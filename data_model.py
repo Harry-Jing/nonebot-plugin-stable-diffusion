@@ -50,10 +50,10 @@ class SDWebuiText2imgData(BaseModel):
     seed_resize_from_w = -1
     batch_size = 1
     n_iter = 1
-    steps = 50
-    cfg_scale = 7
+    steps = 28
+    cfg_scale = 12
     width = 512
-    height = 512
+    height = 768
     restore_faces = False
     tiling = False
     negative_prompt = ''

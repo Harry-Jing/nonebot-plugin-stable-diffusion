@@ -8,31 +8,9 @@ from nonebot.plugin.on import on_shell_command
 from nonebot.exception import ParserExit
 from nonebot.adapters.onebot.v11 import Message, MessageEvent, GroupMessageEvent, MessageSegment
 
+from .parser import *
 from .requests import *
 from .data_model import *
-
-help_content = '''AI 画图
-用法：
-    #绘图 [--count <count>] [--step <step>] [--resolution <width>x<height>] [--scale <scale>] prompt 
-
-    输入用逗号隔开的英文标签，例如：#绘图 loli, school uniform, smile
-
-可用的选项：
-    -h, --help    显示帮助信息
-    --count <count>    画图数量
-    --step <step>    采样部署，大于40后不会有明显进步
-    --resolution <width>x<height>    更爱分辨率
-    --scale <scale>    更改CFG Scale，调整服从标签的强度
-
-这个项目是自己搞着玩的
-项目地址：https://github.com/Harry-Jing/nonebot-plugin-stable-diffusion'''
-
-parser = ArgumentParser()
-parser.add_argument('--count')
-parser.add_argument('--step')
-parser.add_argument('--resolution')
-parser.add_argument('--scale')
-parser.add_argument('prompt',nargs='*')
 
 
 shell_command_draw = on_shell_command("绘图", parser=parser)
@@ -61,9 +39,16 @@ async def test(bot:Bot, event:MessageEvent, argv:list = ShellCommandArgv(), args
     except:
         await shell_command_draw.send('格式错误')
         await shell_command_draw.finish(help_content)
+
     #获取图片
-    await shell_command_draw.send('开始画了，别急')
-    img_list, info = await SDWebuiText2imgRequest(GeneralText2imgData_to_SDWebuiText2imgData(data).json())
+    try:
+        await shell_command_draw.send('开始画了，别急')
+        img_list, info = await SDWebuiText2imgRequest(GeneralText2imgData_to_SDWebuiText2imgData(data).json())
+    except httpx.TimeoutException:
+        await shell_command_draw.send('连接超时')
+    except httpx.HTTPStatusError:
+        await shell_command_draw.send('连接至绘画服务器时出错')
+    
     #发送图片
     message = [MessageSegment.node_custom(
                 user_id=event.user_id,
