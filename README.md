@@ -1,3 +1,6 @@
+# 注意：此项目已经不再维护
+
+
 # 介绍
 基于nonebot与gocqhttp, 使用stable-diffusion-webui的绘画机器人
 
